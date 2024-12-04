@@ -21,6 +21,8 @@
 -- PROFESSOR(id*, nome, cpf)
 -- TURMA(id*, numero*, duracao_dias)
 
+
+
 -- CRIAÇÃO DA TABELA PROFESSOR
 CREATE TABLE IF NOT EXISTS PROFESSOR (
     ID INT PRIMARY KEY,       
