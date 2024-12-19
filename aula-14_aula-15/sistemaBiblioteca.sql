@@ -1,4 +1,4 @@
-begin;
+
 CREATE TABLE autor(
 	id SERIAL PRIMARY KEY,
 	nome VARCHAR(60) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE emprestimo(
 );
 
 -- INSERÇÃO DE DADOS
-begin;
+
 INSERT INTO autor (nome, data_nascimento) VALUES 
 ('Ariano Suassuna', '1927-06-16'),
 ('Machado de Assis', '1839-06-21'),
@@ -76,8 +76,45 @@ SELECT *FROM livro
 SELECT *FROM usuario
 SELECT *FROM emprestimo
 
-rollback;
 
 
 
+-- Listar todos os livros com seus respectivos autores
+SELECT livro.titulo, autor.nome AS autor
+FROM livro
+JOIN autor ON livro.id_autor = id_autor;
 
+-- Listar todos os livros com seus respectivos autores
+SELECT livro.titulo, autor.nome
+FROM autor
+JOIN livro ON livro.id_autor = autor.id;
+
+-- Listar os usuários e seus e-mails
+SELECT nome, email FROM usuario;
+
+-- Mostrar todos os empréstimos realizados
+SELECT livro.titulo, usuario.nome, emprestimo.data_emprestimo, emprestimo.data_devolucao
+FROM emprestimo
+JOIN livro ON emprestimo.id_livro = livro.id
+JOIN usuario ON emprestimo.id_usuario = usuario.id;
+
+-- Listar os livros que ainda não foram devolvidos
+SELECT livro.titulo, emprestimo.data_devolucao
+FROM emprestimo
+JOIN livro ON id_livro = livro.id
+WHERE data_devolucao IS NULL;
+
+-- Verificar se há tentativas de empréstimos duplicados no mesmo dia para um mesmo livro
+SELECT id_livro, data_emprestimo, COUNT(*)
+FROM emprestimo
+GROUP BY id_livro, data_emprestimo
+HAVING COUNT(*) > 1;
+
+-- Encontar usuários que pegaram emprestados livros do autor "Um dos seus autores"
+
+SELECT usuario.nome, livro.titulo
+FROM emprestimo
+JOIN livro ON id_livro = livro.id
+JOIN usuario ON id_usuario = usuario.id
+JOIN autor ON id_autor = autor.id
+WHERE autor.nome = 'Ariano Suassuna';
